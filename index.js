@@ -1,48 +1,37 @@
-import { gameInfo } from './games.js';
-import { newsByGame } from './fixtures.js';
-import { getDateFromUnixTimestamp } from './utils';
+import { getDateFromUnixTimestamp, gamesInfo, getNewsForGameUrl } from './utils';
 
 window.dataStore = {
-  currentGames: {},
+  currentGameId: null,
+  selectedGames: {},
+  isDataLoading: false,
+  error: null,
+  newsByGames: {},
 };
+
+window.renderNewsFeed = renderNewsFeed;
+window.performRetrieve = performRetrieve;
+window.loadData = loadData;
+window.renderNews = renderNews;
 
 renderApp();
 
 function renderApp() {
   document.querySelector('#app-root').innerHTML = `
-        ${App()}
-    `;
-}
-
-function App() {
-  return `
         <form id="games">${renderForm()}</form>
-        <section id="feed">News feed will be here...</section>
+        <div id="feed"></div>
     `;
+  renderNews();
 }
-window.renderNewsFeed = renderNewsFeed;
 
-function renderNewsFeed() {
-  let content = '';
-  Object.keys(window.dataStore.currentGames).map(appid => {
-    const newsData = newsByGame[appid];
-    if (newsData) {
-      const { date, title, contents } = newsData;
-
-      content += `<h3 class="title">${title}</h3>`;
-      content += `<div>${getDateFromUnixTimestamp(date)}</div>`;
-      content += `<p class="content">${contents}</p>`;
-    }
-  });
-
-  return content ? `<div>${content}</div>` : 'News feed will be here...';
+function renderNews() {
+  document.querySelector('#feed').innerHTML = getResults();
 }
 
 function renderForm() {
   return ` 
         <fieldset>
         <legend class="headline">Select games to track news</legend>
-        ${gameInfo.response.apps
+        ${gamesInfo.apps
           .map(
             ({ appid, name }) =>
               `<label for="${appid}">
@@ -62,17 +51,98 @@ function renderForm() {
         `;
 }
 
+function isCurrentGameDataLoaded() {
+  return Boolean(window.dataStore.newsByGames[window.dataStore.currentGameId]);
+}
+
+function loadData() {
+  const url = getNewsForGameUrl(window.dataStore.currentGameId);
+
+  if (!isCurrentGameDataLoaded(window.dataStore.currentGameId)) {
+    return fetch(url)
+      .then(response => response.json())
+      .then(data => ({ data }));
+  }
+
+  return Promise.resolve({});
+}
+
+function performRetrieve(currentGame) {
+  window.dataStore.currentGameId = currentGame.value;
+  window.dataStore.error = null;
+  window.dataStore.isDataLoading = true;
+
+  window
+    .loadData()
+    .then(({ error, data }) => {
+      window.dataStore.isDataLoading = false;
+      if (error) {
+        window.dataStore.error = error;
+      } else if (data) {
+        window.dataStore.newsByGames[currentGame.value] = data;
+      }
+    })
+    .catch(() => {
+      window.dataStore.error = 'Some error occurred.';
+    })
+    .finally(() => {
+      window.renderNews();
+    });
+}
+
+function getResults() {
+  const { currentGameId, isDataLoading, error } = window.dataStore;
+  let content = '';
+  if (currentGameId == null) {
+    content = `<p>Select games to retrieve news for</p>`;
+  } else {
+    if (isDataLoading) {
+      content = `<p>Loading...</p>`;
+    }
+    if (error !== null) {
+      content = error;
+    }
+  }
+  if (isCurrentGameDataLoaded()) {
+    content = renderNewsFeed();
+  }
+  return content;
+}
+
+function createNewsItem(item) {
+  const { date, title, contents } = item;
+  return `
+  <div>
+    <h3 class="title">${title}</h3>
+    <div>${getDateFromUnixTimestamp(date)}</div>
+    <p class="content">${contents}</p>
+  </div>`;
+}
+function renderNewsFeed() {
+  let dataNews = [];
+
+  Object.keys(window.dataStore.selectedGames).map(appid => {
+    dataNews = [...dataNews, ...window.dataStore.newsByGames[appid].appnews.newsitems];
+  });
+  dataNews.sort((a, b) => (a.date < b.date ? 1 : -1));
+  let content = '';
+  dataNews.forEach(item => {
+    content += createNewsItem(item);
+  });
+  return content;
+}
+
 trackGames();
 
 function trackGames() {
   document.querySelector('#games').addEventListener('change', ({ target }) => {
     if (target.type === 'checkbox') {
       if (target.checked === true) {
-        window.dataStore.currentGames[target.value] = target.name;
-        document.querySelector('#feed').innerHTML = window.renderNewsFeed();
+        window.dataStore.selectedGames[target.value] = target.name;
+        performRetrieve(target);
       } else {
-        delete window.dataStore.currentGames[target.value];
-        document.querySelector('#feed').innerHTML = window.renderNewsFeed();
+        delete window.dataStore.selectedGames[target.value];
+        window.renderNews();
       }
     }
   });
