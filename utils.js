@@ -20,5 +20,5 @@ export const gamesInfo = {
 };
 
 export function getNewsForGameUrl(gameId) {
-  return `http://cors-anywhere.herokuapp.com/api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=${gameId}&count=3`;
+  return `https://cors-anywhere.herokuapp.com/api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=${gameId}&count=10`;
 }
