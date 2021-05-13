@@ -75,12 +75,6 @@ function isCurrentGameDataLoaded() {
   return Boolean(window.dataStore.newsByGames[window.dataStore.currentGameId]);
 }
 
-function isCurrentGameSelected() {
-  return Boolean(
-    window.dataStore.checkedGamesIDs.includes(window.dataStore.currentGameId.toString()),
-  );
-}
-
 function loadData() {
   const sourceURL = getNewsForGameUrl(window.dataStore.currentGameId);
 
