@@ -19,6 +19,8 @@ export const gamesInfo = {
   ],
 };
 
+export const herokuURL = 'https://not-so-corsy.herokuapp.com/getdata';
+
 export function getNewsForGameUrl(gameId) {
-  return `https://cors-anywhere.herokuapp.com/api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=${gameId}&count=10`;
+  return `http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=${gameId}&count=10`;
 }

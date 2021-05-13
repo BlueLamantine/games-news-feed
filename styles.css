@@ -1,0 +1,16 @@
+img {
+  max-width: 900px;
+  max-height: 900px;
+}
+.news_feed,
+.news_item {
+  display: flex;
+  flex-direction: column;
+}
+.news_item {
+  max-width: 900px;
+  align-self: center;
+  border: 1px solid;
+  padding: 10px;
+  margin: 5px;
+}

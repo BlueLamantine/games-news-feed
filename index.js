@@ -1,4 +1,5 @@
-import { getDateFromUnixTimestamp, gamesInfo, getNewsForGameUrl } from './utils';
+import { getDateFromUnixTimestamp, gamesInfo, getNewsForGameUrl, herokuURL } from './utils';
+import styles from './styles.css';
 
 window.dataStore = {
   currentGameId: null,
@@ -18,7 +19,7 @@ renderApp();
 function renderApp() {
   document.querySelector('#app-root').innerHTML = `
         <form id="games">${renderForm()}</form>
-        <div id="feed"></div>
+        <div id="feed" class="${styles.news_feed}"></div>
     `;
   renderNews();
 }
@@ -56,10 +57,16 @@ function isCurrentGameDataLoaded() {
 }
 
 function loadData() {
-  const url = getNewsForGameUrl(window.dataStore.currentGameId);
+  const sourceURL = getNewsForGameUrl(window.dataStore.currentGameId);
 
   if (!isCurrentGameDataLoaded(window.dataStore.currentGameId)) {
-    return fetch(url)
+    return fetch(herokuURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url: sourceURL }),
+    })
       .then(response => response.json())
       .then(data => ({ data }));
   }
@@ -109,10 +116,9 @@ function getResults() {
   return content;
 }
 
-function createNewsItem(item) {
-  const { date, title, contents } = item;
+function createNewsItem({ date, title, contents }) {
   return `
-  <div>
+  <div class="${styles.news_item}">
     <h3 class="title">${title}</h3>
     <div>${getDateFromUnixTimestamp(date)}</div>
     <p class="content">${contents}</p>
