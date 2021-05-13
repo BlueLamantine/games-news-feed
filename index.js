@@ -2,64 +2,89 @@ import { getDateFromUnixTimestamp, gamesInfo, getNewsForGameUrl, herokuURL } fro
 import styles from './styles.css';
 
 window.dataStore = {
-  currentGameId: null,
-  selectedGames: {},
+  checkedGamesIDs: [],
+  currentGameId: '',
   isDataLoading: false,
   error: null,
   newsByGames: {},
 };
 
+window.renderApp = renderApp;
 window.renderNewsFeed = renderNewsFeed;
 window.performRetrieve = performRetrieve;
 window.loadData = loadData;
 window.renderNews = renderNews;
 
+function renderForm() {
+  return `
+  <form id="games" onchange="window.trackGames(event); window.performRetrieve()">
+  <fieldset class="allowed_games">
+        <legend class="headline">Select games to track news</legend>
+        ${gamesInfo.apps.map(gameData => renderGameFilter(gameData)).join('')}
+    </fieldset>
+  </form>
+  `;
+}
+
+function renderGameFilter({ appid, name }) {
+  return `<label for="${appid}">
+  <input
+    type="checkbox"
+    id="${appid}"
+    class="main__checkbox"
+    name="${name}"
+    value="${appid}"
+    ${window.dataStore.checkedGamesIDs.includes(appid.toString()) ? 'checked' : ''} 
+  />
+  <span class="game_name">${name}</span>
+</label>`;
+}
+window.trackGames = trackGames;
+
+function trackGames({ target }) {
+  const id = target.id;
+  if (window.dataStore.checkedGamesIDs.includes(id)) {
+    window.dataStore.checkedGamesIDs = window.dataStore.checkedGamesIDs.filter(
+      filterID => filterID !== id,
+    );
+  } else {
+    window.dataStore.checkedGamesIDs = [...window.dataStore.checkedGamesIDs, id];
+    window.dataStore.currentGameId = id;
+  }
+  window.renderApp();
+}
+
 renderApp();
 
 function renderApp() {
-  document.querySelector('#app-root').innerHTML = `
-        <form id="games">${renderForm()}</form>
-        <div id="feed" class="${styles.news_feed}"></div>
-    `;
-  renderNews();
+  document.querySelector('#app-root').innerHTML = `${App()}`;
+}
+
+function App() {
+  return `<div>
+  ${renderForm()}
+  ${getResults()}
+  </div> `;
 }
 
 function renderNews() {
   document.querySelector('#feed').innerHTML = getResults();
 }
 
-function renderForm() {
-  return ` 
-        <fieldset>
-        <legend class="headline">Select games to track news</legend>
-        ${gamesInfo.apps
-          .map(
-            ({ appid, name }) =>
-              `<label for="${appid}">
-                <input
-                  type="checkbox"
-                  id="${appid}"
-                  class="main__checkbox"
-                  name="${name}"
-                  value="${appid}"
-                  aria-label="csgo"
-                />
-                <span class="gaem__item">${name}</span>
-              </label>`,
-          )
-          .join('')}
-        </fieldset>
-        `;
-}
-
 function isCurrentGameDataLoaded() {
   return Boolean(window.dataStore.newsByGames[window.dataStore.currentGameId]);
+}
+
+function isCurrentGameSelected() {
+  return Boolean(
+    window.dataStore.checkedGamesIDs.includes(window.dataStore.currentGameId.toString()),
+  );
 }
 
 function loadData() {
   const sourceURL = getNewsForGameUrl(window.dataStore.currentGameId);
 
-  if (!isCurrentGameDataLoaded(window.dataStore.currentGameId)) {
+  if (!isCurrentGameDataLoaded()) {
     return fetch(herokuURL, {
       method: 'POST',
       headers: {
@@ -74,8 +99,7 @@ function loadData() {
   return Promise.resolve({});
 }
 
-function performRetrieve(currentGame) {
-  window.dataStore.currentGameId = currentGame.value;
+function performRetrieve() {
   window.dataStore.error = null;
   window.dataStore.isDataLoading = true;
 
@@ -86,21 +110,28 @@ function performRetrieve(currentGame) {
       if (error) {
         window.dataStore.error = error;
       } else if (data) {
-        window.dataStore.newsByGames[currentGame.value] = data;
+        window.dataStore.newsByGames[window.dataStore.currentGameId] = data;
       }
     })
     .catch(() => {
       window.dataStore.error = 'Some error occurred.';
     })
     .finally(() => {
-      window.renderNews();
+      window.renderApp();
     });
 }
 
 function getResults() {
-  const { currentGameId, isDataLoading, error } = window.dataStore;
+  const { checkedGamesIDs, isDataLoading, error } = window.dataStore;
   let content = '';
-  if (currentGameId == null) {
+
+  if (isCurrentGameDataLoaded()) {
+    content = `
+    <div class="${styles.news_feed}">${renderNewsFeed()}</div>
+    `;
+  }
+
+  if (checkedGamesIDs.length == 0) {
     content = `<p>Select games to retrieve news for</p>`;
   } else {
     if (isDataLoading) {
@@ -110,9 +141,7 @@ function getResults() {
       content = error;
     }
   }
-  if (isCurrentGameDataLoaded()) {
-    content = renderNewsFeed();
-  }
+
   return content;
 }
 
@@ -127,7 +156,7 @@ function createNewsItem({ date, title, contents }) {
 function renderNewsFeed() {
   let dataNews = [];
 
-  Object.keys(window.dataStore.selectedGames).map(appid => {
+  window.dataStore.checkedGamesIDs.map(appid => {
     dataNews = [...dataNews, ...window.dataStore.newsByGames[appid].appnews.newsitems];
   });
   dataNews.sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -136,20 +165,4 @@ function renderNewsFeed() {
     content += createNewsItem(item);
   });
   return content;
-}
-
-trackGames();
-
-function trackGames() {
-  document.querySelector('#games').addEventListener('change', ({ target }) => {
-    if (target.type === 'checkbox') {
-      if (target.checked === true) {
-        window.dataStore.selectedGames[target.value] = target.name;
-        performRetrieve(target);
-      } else {
-        delete window.dataStore.selectedGames[target.value];
-        window.renderNews();
-      }
-    }
-  });
 }
