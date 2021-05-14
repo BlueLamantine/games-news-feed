@@ -1,4 +1,15 @@
-import { getDateFromUnixTimestamp, gamesInfo, getNewsForGameUrl, herokuURL } from './utils';
+import {
+  getDateFromUnixTimestamp,
+  gamesInfo,
+  getNewsForGameUrl,
+  herokuURL,
+  sortDataByNewest,
+  ALLNEWS,
+  timestamps,
+  getStartDateOfCurrentWeek,
+  getMonthOfDate,
+  getYearOfDate,
+} from './utils';
 import styles from './styles.css';
 
 window.dataStore = {
@@ -7,19 +18,20 @@ window.dataStore = {
   isDataLoading: false,
   error: null,
   newsByGames: {},
+  currentTimestamp: ALLNEWS,
+  currentDate: Math.floor(Date.now() / 1000),
 };
 
 window.renderApp = renderApp;
 window.renderNewsFeed = renderNewsFeed;
 window.performRetrieve = performRetrieve;
 window.loadData = loadData;
-window.renderNews = renderNews;
 
 function renderForm() {
   return `
   <form id="games" onchange="window.trackGames(event); window.performRetrieve()">
   <fieldset class="allowed_games">
-        <legend class="headline">Select games to track news</legend>
+        <legend class="${styles.headline}">Select games to track news</legend>
         ${gamesInfo.apps.map(gameData => renderGameFilter(gameData)).join('')}
     </fieldset>
   </form>
@@ -67,10 +79,6 @@ function App() {
   </div> `;
 }
 
-function renderNews() {
-  document.querySelector('#feed').innerHTML = getResults();
-}
-
 function isCurrentGameDataLoaded() {
   return Boolean(window.dataStore.newsByGames[window.dataStore.currentGameId]);
 }
@@ -110,23 +118,16 @@ function performRetrieve() {
     .catch(() => {
       window.dataStore.error = 'Some error occurred.';
     })
-    .finally(() => {
-      window.renderApp();
-    });
+    .finally(window.renderApp);
 }
 
 function getResults() {
-  const { checkedGamesIDs, isDataLoading, error } = window.dataStore;
+  const { checkedGamesIDs, isDataLoading, error, currentTimestamp } = window.dataStore;
   let content = '';
 
-  if (isCurrentGameDataLoaded()) {
-    content = `
-    <div class="${styles.news_feed}">${renderNewsFeed()}</div>
-    `;
-  }
-
   if (checkedGamesIDs.length == 0) {
-    content = `<p>Select games to retrieve news for</p>`;
+    content = `<p class="${styles.greeting}">
+    Welcome to your personal game news aggregator!</p>`;
   } else {
     if (isDataLoading) {
       content = `<p>Loading...</p>`;
@@ -136,8 +137,43 @@ function getResults() {
     }
   }
 
+  if (isCurrentGameDataLoaded()) {
+    content = `
+        ${timestampsSwitch(currentTimestamp)}
+        ${renderNewsFeed()}
+      `;
+  }
+
   return content;
 }
+
+function timestampsSwitch(currentTimestamp) {
+  return `
+  <fieldset>
+  <legend>Timestamps</legend>
+${timestamps
+  .map(
+    ({ id, value, name }) =>
+      `
+        <input 
+            type="radio" 
+            id="${id}"
+            name="temperature-units" 
+            value="${value}" 
+            ${currentTimestamp === value ? ' checked ' : ''}
+            onchange="(${setCurrentTimestamp})(this.value);"  
+        >
+          <label for="${id}">${name}</label>
+      `,
+  )
+  .join('')}
+ </fieldset>`;
+}
+
+const setCurrentTimestamp = function (value) {
+  window.dataStore.currentTimestamp = value;
+  window.renderApp();
+};
 
 function createNewsItem({ date, title, contents }) {
   return `
@@ -147,16 +183,51 @@ function createNewsItem({ date, title, contents }) {
     <p class="content">${contents}</p>
   </div>`;
 }
+
+function filterDataByTimestamp(data, currentDate, currentTimestamp) {
+  const dataByTimestamp = {
+    today: () => {
+      return data.filter(
+        newsItem =>
+          getDateFromUnixTimestamp(newsItem.date) == getDateFromUnixTimestamp(currentDate),
+      );
+    },
+    week: () => {
+      return data.filter(newsItem => newsItem.date > getStartDateOfCurrentWeek());
+    },
+    month: () => {
+      return data.filter(
+        newsItem =>
+          getYearOfDate(newsItem.date) == getYearOfDate(currentDate) &&
+          getMonthOfDate(newsItem.date) == getMonthOfDate(currentDate),
+      );
+    },
+    alltime: () => {
+      return data;
+    },
+  };
+  return dataByTimestamp[currentTimestamp]();
+}
+
 function renderNewsFeed() {
-  let dataNews = [];
+  let dataNewsContainer = [];
 
   window.dataStore.checkedGamesIDs.map(appid => {
-    dataNews = [...dataNews, ...window.dataStore.newsByGames[appid].appnews.newsitems];
+    dataNewsContainer = [
+      ...dataNewsContainer,
+      ...window.dataStore.newsByGames[appid].appnews.newsitems,
+    ];
   });
-  dataNews.sort((a, b) => (a.date < b.date ? 1 : -1));
+  const news = filterDataByTimestamp(
+    dataNewsContainer,
+    window.dataStore.currentDate,
+    window.dataStore.currentTimestamp,
+  );
   let content = '';
-  dataNews.forEach(item => {
+  sortDataByNewest(news).forEach(item => {
     content += createNewsItem(item);
   });
-  return content;
+  return `
+  <div class="${styles.news_feed}"> ${content} </div>
+  `;
 }

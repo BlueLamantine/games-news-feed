@@ -1,6 +1,13 @@
 export function getDateFromUnixTimestamp(dt) {
   return new Date(dt * 1000).toLocaleDateString();
 }
+export function getMonthOfDate(dt) {
+  return new Date(dt * 1000).getMonth();
+}
+
+export function getYearOfDate(dt) {
+  return new Date(dt * 1000).getFullYear();
+}
 
 export const gamesInfo = {
   apps: [
@@ -19,8 +26,31 @@ export const gamesInfo = {
   ],
 };
 
+export const ALLNEWS = 'alltime';
+
+export const timestamps = [
+  { id: 'all', value: 'alltime', name: 'All news' },
+  { id: 'today', value: 'today', name: 'Today' },
+  { id: 'week', value: 'week', name: 'This week' },
+  { id: 'month', value: 'month', name: 'This month' },
+];
+
 export const herokuURL = 'https://not-so-corsy.herokuapp.com/getdata';
 
 export function getNewsForGameUrl(gameId) {
-  return `http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=${gameId}&count=10`;
+  return `http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=${gameId}&count=20`;
+}
+
+export function sortDataByNewest(data) {
+  return data.sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+export function getStartDateOfCurrentWeek() {
+  let now = new Date();
+  let start = new Date(now);
+  let dayOfWeek = now.getDay();
+  let numDay = now.getDate() + 1;
+  start.setDate(numDay - dayOfWeek);
+
+  return Math.floor(start / 1000);
 }
