@@ -9,6 +9,7 @@ import {
   getStartDate,
   getMonthOfDate,
   getYearOfDate,
+  currentDate,
 } from './utils';
 import styles from './styles.css';
 
@@ -19,13 +20,17 @@ window.dataStore = {
   error: null,
   newsByGames: {},
   currentTimestamp: ALLNEWS,
-  currentDate: Math.floor(Date.now() / 1000),
+  tag: null,
+  filteredNews: null,
+  keyword: '',
 };
 
 window.renderApp = renderApp;
 window.renderNewsFeed = renderNewsFeed;
 window.performRetrieve = performRetrieve;
 window.loadData = loadData;
+window.clearInput = clearInput;
+window.searchByKeyword = searchByKeyword;
 
 function renderForm() {
   return `
@@ -137,9 +142,10 @@ function getResults() {
     }
   }
 
-  if (isCurrentGameDataLoaded()) {
+  if (isCurrentGameDataLoaded() && checkedGamesIDs.length !== 0) {
     content = `
-        ${timestampsSwitch(currentTimestamp)}
+        ${renderTimestamps(currentTimestamp)}
+        ${renderSearch()}
         ${renderNewsFeed()}
       `;
   }
@@ -147,11 +153,38 @@ function getResults() {
   return content;
 }
 
-function timestampsSwitch(currentTimestamp) {
+function renderSearch() {
   return `
-  <fieldset>
+  <div>
+  <p>Input KEYWORD and press enter</p>
+  <input
+      type="text"
+      value="${window.dataStore.keyword}"
+      onchange="window.searchByKeyword(this.value);" 
+  />
+  <button 
+    type="button"
+    onclick="window.clearInput()"
+    >Clear</button>
+  </div>
+`;
+}
+
+function clearInput() {
+  window.dataStore.keyword = '';
+  window.renderApp();
+}
+
+function searchByKeyword(value) {
+  window.dataStore.keyword = value;
+  window.renderApp();
+}
+
+function renderTimestamps(currentTimestamp) {
+  return `
+  <div>
   <legend>Timestamps</legend>
-  <select onchange="(${setCurrentTimestamp})(this.value);">
+  <select id="selectTimestamp" onchange="(${setCurrentTimestamp})(this.value);">
 ${timestamps
   .map(
     ({ id, value, name }) =>
@@ -167,7 +200,8 @@ ${timestamps
   )
   .join('')}
   </select>
- </fieldset>`;
+  </div>
+  `;
 }
 
 const setCurrentTimestamp = function (value) {
@@ -175,13 +209,38 @@ const setCurrentTimestamp = function (value) {
   window.renderApp();
 };
 
-function createNewsItem({ date, title, contents }) {
+function createNewsItem({ date, title, contents, feedlabel }) {
   return `
   <div class="${styles.news_item}">
     <h3 class="title">${title}</h3>
+    <div>${feedlabel}</div>
     <div>${getDateFromUnixTimestamp(date)}</div>
     <p class="content">${contents}</p>
+    <div> All news with tag
+      <label for="${feedlabel}">
+        <input
+          type="checkbox"
+          id="${feedlabel}"
+          class="main__checkbox"
+          name="tag"
+          value="${feedlabel}"
+          ${window.dataStore.tag == feedlabel ? 'checked' : null}
+          onchange="(${setTag})(this.value);"
+        />
+        <span class="game_name">${feedlabel}</span>
+      </label>
+    </div>
   </div>`;
+}
+
+function setTag(value) {
+  if (window.dataStore.tag !== null) {
+    window.dataStore.tag = null;
+  } else {
+    window.dataStore.tag = value;
+  }
+
+  window.renderApp();
 }
 
 function filterDataByTimestamp(data, currentDate, currentTimestamp) {
@@ -210,22 +269,32 @@ function filterDataByTimestamp(data, currentDate, currentTimestamp) {
 }
 
 function renderNewsFeed() {
+  const { checkedGamesIDs, newsByGames, tag, currentTimestamp, keyword } = window.dataStore;
   let dataNewsContainer = [];
 
-  window.dataStore.checkedGamesIDs.map(appid => {
-    dataNewsContainer = [
-      ...dataNewsContainer,
-      ...window.dataStore.newsByGames[appid].appnews.newsitems,
-    ];
+  checkedGamesIDs.map(appid => {
+    dataNewsContainer = [...dataNewsContainer, ...newsByGames[appid].appnews.newsitems];
   });
-  const news = filterDataByTimestamp(
+
+  window.dataStore.filteredNews = filterDataByTimestamp(
     dataNewsContainer,
-    window.dataStore.currentDate,
-    window.dataStore.currentTimestamp,
+    currentDate,
+    currentTimestamp,
   );
+
+  if (keyword !== '') {
+    window.dataStore.filteredNews = dataNewsContainer.filter(el => el.title.includes(keyword));
+  }
+
+  if (tag != null) {
+    window.dataStore.filteredNews = dataNewsContainer.filter(
+      el => el.feedlabel == window.dataStore.tag,
+    );
+  }
+
   let content = '';
-  sortDataByNewest(news).forEach(item => {
-    content += createNewsItem(item);
+  sortDataByNewest(window.dataStore.filteredNews).forEach(newsItem => {
+    content += createNewsItem(newsItem);
   });
   return `
   <div class="${styles.news_feed}"> ${content} </div>

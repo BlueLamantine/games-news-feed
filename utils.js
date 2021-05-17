@@ -9,6 +9,8 @@ export function getYearOfDate(dt) {
   return new Date(dt * 1000).getFullYear();
 }
 
+export const currentDate = Math.floor(Date.now() / 1000);
+
 export const gamesInfo = {
   apps: [
     {
