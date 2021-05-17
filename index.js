@@ -6,7 +6,7 @@ import {
   sortDataByNewest,
   ALLNEWS,
   timestamps,
-  getStartDateOfCurrentWeek,
+  getStartDate,
   getMonthOfDate,
   getYearOfDate,
 } from './utils';
@@ -151,22 +151,22 @@ function timestampsSwitch(currentTimestamp) {
   return `
   <fieldset>
   <legend>Timestamps</legend>
+  <select onchange="(${setCurrentTimestamp})(this.value);">
 ${timestamps
   .map(
     ({ id, value, name }) =>
       `
-        <input 
-            type="radio" 
-            id="${id}"
-            name="temperature-units" 
-            value="${value}" 
-            ${currentTimestamp === value ? ' checked ' : ''}
-            onchange="(${setCurrentTimestamp})(this.value);"  
-        >
-          <label for="${id}">${name}</label>
-      `,
+      <option  
+          id="${id}" 
+          name="timestamp-option"
+          value="${value}"
+          ${currentTimestamp === value ? ' selected ' : ''}
+          >${name}</option>
+ 
+  `,
   )
   .join('')}
+  </select>
  </fieldset>`;
 }
 
@@ -193,7 +193,7 @@ function filterDataByTimestamp(data, currentDate, currentTimestamp) {
       );
     },
     week: () => {
-      return data.filter(newsItem => newsItem.date > getStartDateOfCurrentWeek());
+      return data.filter(newsItem => newsItem.date > getStartDate());
     },
     month: () => {
       return data.filter(
