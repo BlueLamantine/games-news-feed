@@ -1,16 +1,23 @@
-export function renderSearch(searchByKeywordCB, clearInputCB) {
+const setCurrentKeyword = function (value) {
+  window.dataStore.keyword = value;
+  window.renderApp();
+};
+
+export function renderSearch() {
   return `
     <div>
     <p>Input KEYWORD and press enter</p>
     <input
         type="text"
+        id="search-input"
+        placeholder="search"
         value="${window.dataStore.keyword}"
-        onchange="(${searchByKeywordCB})(this.value);" 
+        onchange="(${setCurrentKeyword})(this.value);"
     />
     <button 
       type="button"
-      onclick="(${clearInputCB})"
-      >Clear</button>
+      onclick="window.renderApp();"
+      >Search</button>
     </div>
   `;
 }

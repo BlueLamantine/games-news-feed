@@ -3,16 +3,6 @@ import { renderSearch } from './SearchByKeyword';
 import { renderNewsFeed } from './NewsFeed';
 import isCurrentGameDataLoaded from '../data/newsData';
 
-const setCurrentKeyword = function (value) {
-  window.dataStore.keyword = value;
-  window.renderApp();
-};
-
-const clearInput = function () {
-  window.dataStore.keyword = '';
-  window.renderApp();
-};
-
 const setCurrentTimestamp = function (value) {
   window.dataStore.currentTimestamp = value;
   window.renderApp();
@@ -37,7 +27,7 @@ export default function getResults() {
   if (isCurrentGameDataLoaded() && checkedGamesIDs.length !== 0) {
     content = `
         ${renderTimestamps(currentTimestamp, setCurrentTimestamp)}
-        ${renderSearch(setCurrentKeyword, clearInput)}
+        ${renderSearch()}
         ${renderNewsFeed()}
       `;
   }
