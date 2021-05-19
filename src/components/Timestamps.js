@@ -1,3 +1,7 @@
+/** @jsx createElement */
+/** @jsxFrag createFragment */
+import { createElement, createFragment } from '../framework/element';
+
 import { getDateFromUnixTimestamp, getYearOfDate, getMonthOfDate } from '../utils';
 
 const TIMESTAMPS = [
@@ -32,26 +36,28 @@ export function filterDataByTimestamp(data, currentDate, currentTimestamp) {
   return dataByTimestamp[currentTimestamp]();
 }
 
-export function renderTimestamps(currentTimestamp, setCurrentTimestampCB) {
-  return `
-    <div>
-    <legend>Timestamps</legend>
-    <select id="selectTimestamp" onchange="(${setCurrentTimestampCB})(this.value);">
-  ${TIMESTAMPS.map(
-    ({ id, value, name }) =>
-      `
-        <option  
-            id="${id}" 
-            name="timestamp-option"
-            value="${value}"
-            ${currentTimestamp === value ? ' selected ' : ''}
-            >${name}</option>
-   
-    `,
-  ).join('')}
-    </select>
-    </div>
-    `;
+export function Timestamps({ currentTimestamp, setCurrentTimestampCB }) {
+  return (
+    <>
+      <div>
+        <p>Timestamps</p>
+        <select id="selectTimestamp" onChange={event => setCurrentTimestampCB(event.target.value)}>
+          {TIMESTAMPS.map(({ id, value, name }) => {
+            return (
+              <option
+                value={value}
+                id={id}
+                name="timestamp-option"
+                {...(value === currentTimestamp ? { selected: '' } : {})}
+              >
+                {name}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    </>
+  );
 }
 
 function getStartDate() {

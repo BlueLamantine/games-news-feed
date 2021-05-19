@@ -1,3 +1,7 @@
+/** @jsx createElement */
+/** @jsxFrag createFragment */
+import { createElement, createFragment } from '../framework/element';
+
 import { gamesInfo } from '../data/SteamAPI';
 
 function trackGames({ target }) {
@@ -13,27 +17,34 @@ function trackGames({ target }) {
   window.renderApp();
 }
 
-export default function getAvailableGames() {
-  return `
-    <form id="games" onchange="(${trackGames})(event); window.performRetrieve()">
-    <fieldset class="allowed_games">
-          <legend>Select games to track news</legend>
-          ${gamesInfo.apps.map(gameData => renderGameFilter(gameData)).join('')}
+export default function AvailableGames() {
+  return (
+    <form
+      id="games"
+      onChange={event => {
+        trackGames(event);
+        window.performRetrieve();
+      }}
+    >
+      <fieldset class="allowed_games">
+        <legend>Select games to track news</legend>
+        {gamesInfo.apps.map(gameData => renderGameFilter(gameData))}
       </fieldset>
     </form>
-    `;
+  );
 }
 
 function renderGameFilter({ appid, name }) {
-  return `<label for="${appid}">
-    <input
-      type="checkbox"
-      id="${appid}"
-      class="main__checkbox"
-      name="${name}"
-      value="${appid}"
-      ${window.dataStore.checkedGamesIDs.includes(appid.toString()) ? 'checked' : ''} 
-    />
-    <span class="game_name">${name}</span>
-  </label>`;
+  return (
+    <label For={appid}>
+      <input
+        type="checkbox"
+        id={appid}
+        name={name}
+        value={appid}
+        checked={window.dataStore.checkedGamesIDs.includes(appid.toString())}
+      />
+      <span>{name}</span>
+    </label>
+  );
 }

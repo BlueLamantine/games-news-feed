@@ -8,5 +8,6 @@ window.renderApp = renderApp;
 window.performRetrieve = performRetrieve;
 window.loadData = loadData;
 
-const ROOTID = 'app-root';
-renderApp(App, ROOTID);
+//const ROOTID = 'app-root';
+//renderApp(App, ROOTID);
+renderApp(App, document.getElementById('app-root'));

@@ -1,41 +1,12 @@
+/** @jsx createElement */
+/** @jsxFrag createFragment */
+import { createElement, createFragment } from '../framework/element';
+
 import { filterDataByTimestamp } from './Timestamps';
 import { getDateFromUnixTimestamp, currentDate, sortDataByNewest } from '../utils';
+import NewsItem from './NewsFeedItem';
 
-function setTag(value) {
-  if (window.dataStore.tag !== null) {
-    window.dataStore.tag = null;
-  } else {
-    window.dataStore.tag = value;
-  }
-
-  window.renderApp();
-}
-
-function createNewsItem({ date, title, contents, feedlabel }) {
-  return `
-    <div>
-      <h3 class="title">${title}</h3>
-      <div>${feedlabel}</div>
-      <div>${getDateFromUnixTimestamp(date)}</div>
-      <p class="content">${contents}</p>
-      <div> All news with tag
-        <label for="${feedlabel}">
-          <input
-            type="checkbox"
-            id="${feedlabel}"
-            class="main__checkbox"
-            name="tag"
-            value="${feedlabel}"
-            ${window.dataStore.tag == feedlabel ? 'checked' : null}
-            onchange="(${setTag})(this.value);"
-          />
-          <span class="game_name">${feedlabel}</span>
-        </label>
-      </div>
-    </div>`;
-}
-
-export function renderNewsFeed() {
+export default function NewsFeed() {
   const { checkedGamesIDs, newsByGames, tag, currentTimestamp, keyword } = window.dataStore;
   let dataNewsContainer = [];
 
@@ -57,12 +28,15 @@ export function renderNewsFeed() {
     window.dataStore.filteredNews = dataNewsContainer.filter(el => el.feedlabel == tag);
   }
 
-  let content = '';
-
-  sortDataByNewest(window.dataStore.filteredNews).forEach(newsItem => {
-    content += createNewsItem(newsItem);
-  });
-  return `
-    <div> ${content} </div>
-    `;
+  window.dataStore.filteredNews = sortDataByNewest(window.dataStore.filteredNews);
+  return (
+    <>
+      <p>News feed:</p>
+      <div>
+        {window.dataStore.filteredNews.map(item => {
+          return <NewsItem itemData={item} />;
+        })}
+      </div>
+    </>
+  );
 }

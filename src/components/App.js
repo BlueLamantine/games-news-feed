@@ -1,9 +1,16 @@
-import getAvailableGames from './Games';
-import getResults from './NewsResults';
+/** @jsx createElement */
+/** @jsxFrag createFragment */
+import { createElement, createFragment } from '../framework/element';
 
-export default function App() {
-  return `<div>
-    ${getAvailableGames()}
-    ${getResults()}
-    </div> `;
+import AvailableGames from './Games';
+import NewsResults from './NewsResults';
+
+function App() {
+  return (
+    <>
+      <AvailableGames />
+      <NewsResults />
+    </>
+  );
 }
+export default App;
