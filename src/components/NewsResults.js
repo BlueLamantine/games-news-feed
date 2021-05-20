@@ -1,7 +1,7 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
 import { createElement, createFragment } from '../framework/element';
-
+import renderApp from '../framework/render';
 import { Timestamps } from './Timestamps';
 import Search from './SearchByKeyword';
 import NewsFeed from './NewsFeed';
@@ -9,7 +9,7 @@ import isCurrentGameDataLoaded from '../data/newsData';
 
 const setCurrentTimestamp = function (value) {
   window.dataStore.currentTimestamp = value;
-  window.renderApp();
+  renderApp();
 };
 
 export default function NewsResults() {
@@ -20,7 +20,7 @@ export default function NewsResults() {
     content = `Welcome to your personal game news aggregator!`;
   } else {
     if (isDataLoading) {
-      content = `Loading...Please, wait. It may takes more than <b>20 seconds</b> for a first load`;
+      content = `Loading...Please, wait. It may takes more than 20 seconds for a first load`;
     }
     if (error !== null) {
       content = error;

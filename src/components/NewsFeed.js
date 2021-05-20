@@ -3,7 +3,7 @@
 import { createElement, createFragment } from '../framework/element';
 
 import { filterDataByTimestamp } from './Timestamps';
-import { getDateFromUnixTimestamp, currentDate, sortDataByNewest } from '../utils';
+import { currentDate, sortDataByNewest } from '../utils';
 import NewsItem from './NewsFeedItem';
 
 export default function NewsFeed() {

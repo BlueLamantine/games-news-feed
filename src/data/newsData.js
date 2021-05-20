@@ -1,10 +1,11 @@
 import { getNewsForGameUrl, herokuURL } from './SteamAPI';
+import renderApp from '../framework/render';
 
 export default function isCurrentGameDataLoaded() {
   return Boolean(window.dataStore.newsByGames[window.dataStore.currentGameId]);
 }
 
-export function loadData() {
+function loadData() {
   const sourceURL = getNewsForGameUrl(window.dataStore.currentGameId);
 
   if (!isCurrentGameDataLoaded()) {
@@ -25,9 +26,8 @@ export function loadData() {
 export function performRetrieve() {
   window.dataStore.error = null;
   window.dataStore.isDataLoading = true;
-  window.renderApp();
-  window
-    .loadData()
+  renderApp();
+  loadData()
     .then(({ error, data }) => {
       window.dataStore.isDataLoading = false;
       if (error) {
@@ -39,5 +39,5 @@ export function performRetrieve() {
     .catch(() => {
       window.dataStore.error = 'Some error occurred.';
     })
-    .finally(window.renderApp);
+    .finally(renderApp);
 }

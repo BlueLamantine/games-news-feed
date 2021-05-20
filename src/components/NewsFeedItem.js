@@ -3,8 +3,7 @@
 import { createElement, createFragment } from '../framework/element';
 
 import { getDateFromUnixTimestamp } from '../utils';
-import Parser from 'html-react-parser';
-var thisIsMyCopy = '<p>copy copy copy <strong>strong copy</strong></p>';
+import renderApp from '../framework/render';
 
 function setTag(value) {
   if (window.dataStore.tag !== null) {
@@ -13,7 +12,7 @@ function setTag(value) {
     window.dataStore.tag = value;
   }
 
-  window.renderApp();
+  renderApp();
 }
 
 function prepareData(data) {

@@ -5,7 +5,7 @@ import renderApp from '../framework/render';
 
 const setCurrentKeyword = function (value) {
   window.dataStore.keyword = value;
-  window.renderApp();
+  renderApp();
 };
 
 export default function Search() {

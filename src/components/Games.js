@@ -1,7 +1,8 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
 import { createElement, createFragment } from '../framework/element';
-
+import renderApp from '../framework/render';
+import { performRetrieve } from '../data/newsData';
 import { gamesInfo } from '../data/SteamAPI';
 
 function trackGames({ target }) {
@@ -14,7 +15,7 @@ function trackGames({ target }) {
     window.dataStore.checkedGamesIDs = [...window.dataStore.checkedGamesIDs, id];
     window.dataStore.currentGameId = id;
   }
-  window.renderApp();
+  renderApp();
 }
 
 export default function AvailableGames() {
@@ -23,7 +24,7 @@ export default function AvailableGames() {
       id="games"
       onChange={event => {
         trackGames(event);
-        window.performRetrieve();
+        performRetrieve();
       }}
     >
       <fieldset class="allowed_games">
