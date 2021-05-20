@@ -1,7 +1,7 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
-import { createElement, createFragment } from '../framework/element';
-import renderApp from '../framework/render';
+import { createElement, createFragment } from '../../framework/element';
+import renderApp from '../../framework/render';
 
 const setCurrentKeyword = function (value) {
   window.dataStore.keyword = value;

@@ -1,5 +1,6 @@
 import { getNewsForGameUrl, herokuURL } from './SteamAPI';
 import renderApp from '../framework/render';
+import { getDateFromUnixTimestamp, getYearOfDate, getMonthOfDate, getStartDate } from '../utils';
 
 export default function isCurrentGameDataLoaded() {
   return Boolean(window.dataStore.newsByGames[window.dataStore.currentGameId]);
@@ -40,4 +41,29 @@ export function performRetrieve() {
       window.dataStore.error = 'Some error occurred.';
     })
     .finally(renderApp);
+}
+
+export function filterDataByTimestamp(data, currentDate, currentTimestamp) {
+  const dataByTimestamp = {
+    today: () => {
+      return data.filter(
+        newsItem =>
+          getDateFromUnixTimestamp(newsItem.date) == getDateFromUnixTimestamp(currentDate),
+      );
+    },
+    week: () => {
+      return data.filter(newsItem => newsItem.date > getStartDate());
+    },
+    month: () => {
+      return data.filter(
+        newsItem =>
+          getYearOfDate(newsItem.date) == getYearOfDate(currentDate) &&
+          getMonthOfDate(newsItem.date) == getMonthOfDate(currentDate),
+      );
+    },
+    alltime: () => {
+      return data;
+    },
+  };
+  return dataByTimestamp[currentTimestamp]();
 }

@@ -1,11 +1,11 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
-import { createElement, createFragment } from '../framework/element';
-import renderApp from '../framework/render';
-import { Timestamps } from './Timestamps';
-import Search from './SearchByKeyword';
-import NewsFeed from './NewsFeed';
-import isCurrentGameDataLoaded from '../data/newsData';
+import { createElement, createFragment } from '../../framework/element';
+import renderApp from '../../framework/render';
+import { Timestamp } from '../Timestamp/Timestamp';
+import Search from '../Search/SearchByKeyword';
+import NewsFeed from '../NewsFeed/NewsFeed';
+import isCurrentGameDataLoaded from '../../data/newsData';
 
 const setCurrentTimestamp = function (value) {
   window.dataStore.currentTimestamp = value;
@@ -30,7 +30,7 @@ export default function NewsResults() {
   if (isCurrentGameDataLoaded() && checkedGamesIDs.length !== 0) {
     content = (
       <>
-        <Timestamps
+        <Timestamp
           currentTimestamp={currentTimestamp}
           setCurrentTimestampCB={setCurrentTimestamp}
         />

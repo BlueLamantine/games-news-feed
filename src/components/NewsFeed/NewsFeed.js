@@ -1,10 +1,21 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
-import { createElement, createFragment } from '../framework/element';
+import { createElement, createFragment } from '../../framework/element';
 
-import { filterDataByTimestamp } from './Timestamps';
-import { currentDate, sortDataByNewest } from '../utils';
-import NewsItem from './NewsFeedItem';
+import { filterDataByTimestamp } from '../../data/newsData';
+import { currentDate, sortDataByNewest } from '../../utils';
+import NewsItem from '../NewsFeedItem/NewsFeedItem';
+import renderApp from '../../framework/render';
+
+const setTag = function (value) {
+  if (window.dataStore.tag !== null) {
+    window.dataStore.tag = null;
+  } else {
+    window.dataStore.tag = value;
+  }
+
+  renderApp();
+};
 
 export default function NewsFeed() {
   const { checkedGamesIDs, newsByGames, tag, currentTimestamp, keyword } = window.dataStore;
@@ -32,9 +43,10 @@ export default function NewsFeed() {
   return (
     <>
       <p>News feed:</p>
+      <div>tag:{window.dataStore.tag || 'all tags'}</div>
       <div>
         {window.dataStore.filteredNews.map(item => {
-          return <NewsItem itemData={item} />;
+          return <NewsItem itemData={item} setTagCB={setTag} />;
         })}
       </div>
     </>
