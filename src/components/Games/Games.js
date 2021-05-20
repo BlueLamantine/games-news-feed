@@ -5,6 +5,7 @@ import { performRetrieve } from '../../data/newsData';
 import { gamesInfo } from '../../data/SteamAPI';
 import trackGames from '../../data/gamesData';
 import Checkbox from '../Checkbox/Checkbox';
+import styles from './Games.css';
 
 export default function AvailableGames() {
   return (
