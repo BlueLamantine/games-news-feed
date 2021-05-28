@@ -1,4 +1,4 @@
-import renderApp from '../framework/render';
+import renderApp from '../../framework/render';
 
 export default function trackGames({ target }) {
   const id = target.id;
