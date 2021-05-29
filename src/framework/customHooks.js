@@ -18,7 +18,7 @@ export function useDataNews() {
           if (error) {
             setError(error);
           } else if (data) {
-            dataStorage[currentGameId] = data;
+            setDataStorage({ ...dataStorage, [currentGameId]: data });
           }
         })
         .catch(setError)
