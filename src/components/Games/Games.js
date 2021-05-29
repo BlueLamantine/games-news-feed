@@ -1,19 +1,30 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
-import { createElement, createFragment } from '../../framework/element';
-import { performRetrieve } from '../../data/newsData';
+import { createElement, createFragment, render } from '../../framework';
 import { gamesInfo } from '../../data/SteamAPI';
-import trackGames from './TrackGames';
 import Checkbox from '../Checkbox/Checkbox';
-import styles from './Games.css';
 
-export default function AvailableGames() {
+function trackGames({ target }, setCurrentGameId, selectedGamesIDs, setSelectedGamesIDs) {
+  const id = target.id;
+  if (selectedGamesIDs.includes(id)) {
+    setSelectedGamesIDs(selectedGamesIDs.filter(filterID => filterID !== id));
+  } else {
+    setSelectedGamesIDs([...selectedGamesIDs, id]);
+    setCurrentGameId(id);
+  }
+  render();
+}
+
+export default function AvailableGames({
+  setCurrentGameId,
+  selectedGamesIDs,
+  setSelectedGamesIDs,
+}) {
   return (
     <form
       id="games"
       onChange={event => {
-        trackGames(event);
-        performRetrieve();
+        trackGames(event, setCurrentGameId, selectedGamesIDs, setSelectedGamesIDs);
       }}
     >
       <fieldset class="allowed_games">
@@ -23,7 +34,7 @@ export default function AvailableGames() {
             <Checkbox
               id={appid}
               label={name}
-              condition={window.dataStore.checkedGamesIDs.includes(appid.toString())}
+              condition={selectedGamesIDs.includes(appid.toString())}
             />
           </>
         ))}

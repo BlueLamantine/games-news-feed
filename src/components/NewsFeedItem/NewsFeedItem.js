@@ -1,12 +1,12 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
-import { createElement, createFragment } from '../../framework/element';
+import { createElement, createFragment } from '../../framework';
 
 import { getDateFromUnixTimestamp } from '../../utils';
 import { dataToHTML } from '../../utils';
 import Checkbox from '../Checkbox/Checkbox';
 
-export default function NewsItem({ itemData, setTagCB }) {
+export default function NewsItem({ itemData, currentTag, onChange }) {
   const { date, title, contents, feedlabel } = itemData;
   return (
     <>
@@ -21,8 +21,8 @@ export default function NewsItem({ itemData, setTagCB }) {
           <Checkbox
             id={feedlabel}
             label={feedlabel}
-            condition={window.dataStore.tag == feedlabel}
-            onChange={event => setTagCB(event.target.value)}
+            condition={currentTag == feedlabel}
+            onChange={event => onChange(event.target.value)}
           />
         </>
       </div>

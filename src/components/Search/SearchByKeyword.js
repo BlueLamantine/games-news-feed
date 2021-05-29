@@ -1,14 +1,8 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
-import { createElement, createFragment } from '../../framework/element';
-import renderApp from '../../framework/render';
+import { createElement, render } from '../../framework';
 
-const setCurrentKeyword = function (value) {
-  window.dataStore.keyword = value;
-  renderApp();
-};
-
-export default function Search() {
+export default function Search({ currentKeyword, setCurrentKeyword }) {
   return (
     <div>
       <p>Input KEYWORD and press enter</p>
@@ -16,10 +10,10 @@ export default function Search() {
         type="text"
         id="search-input"
         placeholder="search"
-        value={window.dataStore.keyword}
+        value={currentKeyword}
         onChange={event => setCurrentKeyword(event.target.value)}
       />
-      <button type="button" onClick={event => renderApp()}>
+      <button type="button" onClick={event => render()}>
         Search
       </button>
     </div>

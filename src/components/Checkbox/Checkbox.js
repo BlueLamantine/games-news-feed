@@ -10,11 +10,4 @@ export default function Checkbox({ id = null, label = '', onChange = null, condi
       <span>{label}</span>
     </label>
   );
-  /* return (
-    <label className={[styles.check, styles.option]}>
-      <input className={styles.check__input} type="checkbox" onChange={onChange} />
-      <span className={styles.check__box}></span>
-      {label}
-    </label>
-  );*/
 }

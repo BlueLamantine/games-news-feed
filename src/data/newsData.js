@@ -1,49 +1,13 @@
-import { getNewsForGameUrl, herokuURL } from './SteamAPI';
-import renderApp from '../framework/render';
-import { getDateFromUnixTimestamp, getYearOfDate, getMonthOfDate, getStartDate } from '../utils';
+import {
+  getDateFromUnixTimestamp,
+  getYearOfDate,
+  getMonthOfDate,
+  getStartDate,
+  currentDate,
+  sortDataByNewest,
+} from '../utils';
 
-export default function isCurrentGameDataLoaded() {
-  return Boolean(window.dataStore.newsByGames[window.dataStore.currentGameId]);
-}
-
-function loadData() {
-  const sourceURL = getNewsForGameUrl(window.dataStore.currentGameId);
-
-  if (!isCurrentGameDataLoaded()) {
-    return fetch(herokuURL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ url: sourceURL }),
-    })
-      .then(response => response.json())
-      .then(data => ({ data }));
-  }
-
-  return Promise.resolve({});
-}
-
-export function performRetrieve() {
-  window.dataStore.error = null;
-  window.dataStore.isDataLoading = true;
-  renderApp();
-  loadData()
-    .then(({ error, data }) => {
-      window.dataStore.isDataLoading = false;
-      if (error) {
-        window.dataStore.error = error;
-      } else if (data) {
-        window.dataStore.newsByGames[window.dataStore.currentGameId] = data;
-      }
-    })
-    .catch(() => {
-      window.dataStore.error = 'Some error occurred.';
-    })
-    .finally(renderApp);
-}
-
-export function filterDataByTimestamp(data, currentDate, currentTimestamp) {
+function filterDataByTimestamp(data, currentDate, currentTimestamp) {
   const dataByTimestamp = {
     today: () => {
       return data.filter(
@@ -66,4 +30,32 @@ export function filterDataByTimestamp(data, currentDate, currentTimestamp) {
     },
   };
   return dataByTimestamp[currentTimestamp]();
+}
+
+export function prepareDataToRender(
+  selectedGamesIDs,
+  dataStorage,
+  currentTimestamp,
+  currentKeyword,
+  currentTag,
+) {
+  let dataNewsContainer = [];
+  let filteredNews = [];
+  selectedGamesIDs.map(appid => {
+    if (dataStorage[appid] !== undefined) {
+      dataNewsContainer = [...dataNewsContainer, ...dataStorage[appid].appnews.newsitems];
+    }
+  });
+
+  filteredNews = filterDataByTimestamp(dataNewsContainer, currentDate, currentTimestamp);
+
+  if (currentKeyword !== '') {
+    filteredNews = dataNewsContainer.filter(el => el.title.includes(currentKeyword));
+  }
+
+  if (currentTag) {
+    filteredNews = dataNewsContainer.filter(el => el.feedlabel == currentTag);
+  }
+
+  return sortDataByNewest(filteredNews);
 }

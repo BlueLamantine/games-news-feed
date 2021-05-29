@@ -28,3 +28,20 @@ export const herokuURL = 'https://not-so-corsy.herokuapp.com/getdata';
 export function getNewsForGameUrl(gameId) {
   return `http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=${gameId}&count=20`;
 }
+
+export function loadNewsData(currentGameId) {
+  const sourceURL = getNewsForGameUrl(currentGameId);
+
+  return (
+    fetch(herokuURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url: sourceURL }),
+    })
+      .then(response => response.json())
+      //.then(data => ({ data }.data));
+      .then(data => ({ data }))
+  );
+}

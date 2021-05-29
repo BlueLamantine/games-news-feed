@@ -1,7 +1,4 @@
-import dataStore from './data/dataStore';
-import renderApp from './framework/render';
+import { render } from './framework';
 import App from './components/App';
 
-window.dataStore = dataStore;
-
-renderApp(App, document.getElementById('app-root'));
+render(App, document.getElementById('app-root'));
