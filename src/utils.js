@@ -33,3 +33,5 @@ export function getStartDate() {
 
   return Math.floor(start / 1000);
 }
+
+export const isFunction = func => typeof func === 'function';

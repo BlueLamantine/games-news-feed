@@ -1,18 +1,5 @@
-import { createElement, createFragment } from './element';
-import { render } from './render';
-import { useState, useEffect } from './hooks';
-import { useDataNews } from './customHooks';
+export * from './element';
 
-export { createElement, createFragment } from './element';
-export { render } from './render';
-export { useState, useEffect } from './hooks';
-export { useDataNews } from './customHooks';
-
-export default {
-  createElement,
-  createFragment,
-  useState,
-  useEffect,
-  useDataNews,
-  render,
-};
+export * from './hooks';
+export * from './customHooks';
+export * from './render';
