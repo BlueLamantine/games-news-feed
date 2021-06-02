@@ -3,15 +3,11 @@
 import { createElement, createFragment, useState } from '../../framework';
 import { prepareDataToRender } from '../../data/newsData';
 import NewsItem from '../NewsFeedItem/NewsFeedItem';
+import { useAppContext } from '../../context';
 
-export default function NewsFeed({
-  dataStorage,
-  selectedGamesIDs,
-  currentTimestamp,
-  currentKeyword,
-}) {
+export default function NewsFeed({ selectedGamesIDs, currentTimestamp, currentKeyword }) {
   const [currentTag, setCurrentTag] = useState(null);
-
+  const dataStorage = useAppContext();
   const changeTag = value => {
     if (currentTag !== null) {
       setCurrentTag(null);

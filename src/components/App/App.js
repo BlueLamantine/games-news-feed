@@ -1,14 +1,14 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
 import { createElement, createFragment, useDataNews } from '../../framework';
-
+import { useEffect, useState } from '../../framework';
 import AvailableGames from '../Games/Games';
 import NewsResults from '../News/NewsResults';
 import styles from './App.css';
+import { AppContext } from '../../context';
 
 export default function App() {
   const {
-    currentGameId,
     setCurrentGameId,
     selectedGamesIDs,
     setSelectedGamesIDs,
@@ -25,13 +25,13 @@ export default function App() {
         selectedGamesIDs={selectedGamesIDs}
         setSelectedGamesIDs={setSelectedGamesIDs}
       />
-      <NewsResults
-        isDataLoaded={isDataLoaded}
-        selectedGamesIDs={selectedGamesIDs}
-        error={error}
-        dataStorage={dataStorage}
-        currentGameId={currentGameId}
-      />
+      <AppContext.Provider value={dataStorage}>
+        <NewsResults
+          isDataLoaded={isDataLoaded}
+          selectedGamesIDs={selectedGamesIDs}
+          error={error}
+        />
+      </AppContext.Provider>
     </>
   );
 }

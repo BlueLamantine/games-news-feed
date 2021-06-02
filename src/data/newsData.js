@@ -41,6 +41,7 @@ export function prepareDataToRender(
 ) {
   let dataNewsContainer = [];
   let filteredNews = [];
+
   selectedGamesIDs.map(appid => {
     if (dataStorage[appid] !== undefined) {
       dataNewsContainer = [...dataNewsContainer, ...dataStorage[appid].appnews.newsitems];

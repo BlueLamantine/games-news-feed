@@ -5,7 +5,7 @@ import { Timestamp } from '../Timestamp/Timestamp';
 import Search from '../Search/SearchByKeyword';
 import NewsFeed from '../NewsFeed/NewsFeed';
 
-export default function NewsResults({ isDataLoaded, selectedGamesIDs, error, dataStorage }) {
+export default function NewsResults({ isDataLoaded, selectedGamesIDs, error }) {
   const [currentTimestamp, setCurrentTimestamp] = useState('alltime');
   const [currentKeyword, setCurrentKeyword] = useState('');
 
@@ -27,7 +27,6 @@ export default function NewsResults({ isDataLoaded, selectedGamesIDs, error, dat
           />
           <Search currentKeyword={currentKeyword} setCurrentKeyword={setCurrentKeyword} />
           <NewsFeed
-            dataStorage={dataStorage}
             selectedGamesIDs={selectedGamesIDs}
             currentTimestamp={currentTimestamp}
             currentKeyword={currentKeyword}

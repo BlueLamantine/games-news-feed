@@ -25,7 +25,6 @@ export function useDataNews() {
         .finally(() => setIsDataLoaded(true));
     }
   }, [currentGameId]);
-
   return {
     currentGameId,
     setCurrentGameId,
