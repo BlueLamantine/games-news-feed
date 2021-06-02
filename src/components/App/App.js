@@ -17,18 +17,24 @@ export default function App() {
     dataStorage,
   } = useDataNews();
 
+  const allData = {
+    dataStorage,
+    selectedGamesIDs,
+  };
+
   return (
     <>
       <header className={styles.main_header}></header>
-      <AvailableGames
-        setCurrentGameId={setCurrentGameId}
-        selectedGamesIDs={selectedGamesIDs}
-        setSelectedGamesIDs={setSelectedGamesIDs}
-      />
-      <AppContext.Provider value={dataStorage}>
+      <AppContext.Provider value={allData}>
+        <AvailableGames
+          setCurrentGameId={setCurrentGameId}
+          //selectedGamesIDs={selectedGamesIDs}
+          setSelectedGamesIDs={setSelectedGamesIDs}
+        />
+
         <NewsResults
           isDataLoaded={isDataLoaded}
-          selectedGamesIDs={selectedGamesIDs}
+          //selectedGamesIDs={selectedGamesIDs}
           error={error}
         />
       </AppContext.Provider>

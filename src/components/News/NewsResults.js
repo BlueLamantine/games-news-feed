@@ -4,11 +4,12 @@ import { createElement, createFragment, useState } from '../../framework';
 import { Timestamp } from '../Timestamp/Timestamp';
 import Search from '../Search/SearchByKeyword';
 import NewsFeed from '../NewsFeed/NewsFeed';
+import { useAppContext } from '../../context';
 
-export default function NewsResults({ isDataLoaded, selectedGamesIDs, error }) {
+export default function NewsResults({ isDataLoaded, error }) {
   const [currentTimestamp, setCurrentTimestamp] = useState('alltime');
   const [currentKeyword, setCurrentKeyword] = useState('');
-
+  const { selectedGamesIDs, dataStorage } = useAppContext();
   if (selectedGamesIDs.length == 0) {
     return <div>Welcome to your personal game news aggregator!</div>;
   } else {

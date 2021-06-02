@@ -3,6 +3,7 @@
 import { createElement, createFragment, render } from '../../framework';
 import { gamesInfo } from '../../data/SteamAPI';
 import Checkbox from '../Checkbox/Checkbox';
+import { useAppContext } from '../../context';
 
 function trackGames({ target }, setCurrentGameId, selectedGamesIDs, setSelectedGamesIDs) {
   const id = target.id;
@@ -15,11 +16,9 @@ function trackGames({ target }, setCurrentGameId, selectedGamesIDs, setSelectedG
   render();
 }
 
-export default function AvailableGames({
-  setCurrentGameId,
-  selectedGamesIDs,
-  setSelectedGamesIDs,
-}) {
+export default function AvailableGames({ setCurrentGameId, setSelectedGamesIDs }) {
+  const { selectedGamesIDs, dataStorage } = useAppContext();
+  //console.log(selectedGamesIDs);
   return (
     <form
       id="games"
