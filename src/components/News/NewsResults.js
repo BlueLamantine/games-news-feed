@@ -1,38 +1,39 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
-import { createElement, createFragment, useState } from '../../framework';
+import { createElement, createFragment, useState, render } from '../../framework';
 import { Timestamp } from '../Timestamp/Timestamp';
 import Search from '../Search/SearchByKeyword';
 import NewsFeed from '../NewsFeed/NewsFeed';
+import { AppContext, DataContext } from '../../context';
+import { useAppContext, useDataContext } from '../../context';
 
-export default function NewsResults({ isDataLoaded, selectedGamesIDs, error }) {
+export default function NewsResults({ isLoading, error, dataStorage }) {
   const [currentTimestamp, setCurrentTimestamp] = useState('alltime');
   const [currentKeyword, setCurrentKeyword] = useState('');
-
-  if (selectedGamesIDs.length == 0) {
+  const selectedGamesIDs = useDataContext();
+  if (Array.from(selectedGamesIDs).length == 0) {
     return <div>Welcome to your personal game news aggregator!</div>;
   } else {
     if (error) {
       return <div>error</div>;
     }
 
-    if (!isDataLoaded) {
+    if (isLoading) {
       return <div>Loading...Please, wait. It may takes more than 20 seconds for a first load</div>;
-    } else {
-      return (
-        <>
-          <Timestamp
-            currentTimestamp={currentTimestamp}
-            setCurrentTimestamp={setCurrentTimestamp}
-          />
-          <Search currentKeyword={currentKeyword} setCurrentKeyword={setCurrentKeyword} />
+    }
+
+    return (
+      <>
+        <Timestamp currentTimestamp={currentTimestamp} setCurrentTimestamp={setCurrentTimestamp} />
+        <Search currentKeyword={currentKeyword} setCurrentKeyword={setCurrentKeyword} />
+        <AppContext.Provider value={dataStorage}>
           <NewsFeed
-            selectedGamesIDs={selectedGamesIDs}
+            // selectedGamesIDs={selectedGamesIDs}
             currentTimestamp={currentTimestamp}
             currentKeyword={currentKeyword}
           />
-        </>
-      );
-    }
+        </AppContext.Provider>
+      </>
+    );
   }
 }

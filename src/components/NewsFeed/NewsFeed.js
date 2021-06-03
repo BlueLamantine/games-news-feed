@@ -3,9 +3,10 @@
 import { createElement, createFragment, useState } from '../../framework';
 import { prepareDataToRender } from '../../data/newsData';
 import NewsItem from '../NewsFeedItem/NewsFeedItem';
-import { useAppContext } from '../../context';
+import { useAppContext, useDataContext } from '../../context';
 
-export default function NewsFeed({ selectedGamesIDs, currentTimestamp, currentKeyword }) {
+export default function NewsFeed({ currentTimestamp, currentKeyword }) {
+  const selectedGamesIDs = useDataContext();
   const [currentTag, setCurrentTag] = useState(null);
   const dataStorage = useAppContext();
   const changeTag = value => {
@@ -22,7 +23,7 @@ export default function NewsFeed({ selectedGamesIDs, currentTimestamp, currentKe
       <div>tag:{currentTag || 'all tags'}</div>
       <div>
         {prepareDataToRender(
-          selectedGamesIDs,
+          Array.from(selectedGamesIDs),
           dataStorage,
           currentTimestamp,
           currentKeyword,

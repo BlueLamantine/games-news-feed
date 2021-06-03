@@ -1,37 +1,41 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
-import { createElement, createFragment, useDataNews } from '../../framework';
+import { createElement, createFragment, useApp } from '../../framework';
 import { useEffect, useState } from '../../framework';
 import AvailableGames from '../Games/Games';
 import NewsResults from '../News/NewsResults';
 import styles from './App.css';
-import { AppContext } from '../../context';
+import { AppContext, DataContext } from '../../context';
 
 export default function App() {
   const {
+    currentGameId,
     setCurrentGameId,
     selectedGamesIDs,
     setSelectedGamesIDs,
     error,
-    isDataLoaded,
+    isLoading,
     dataStorage,
-  } = useDataNews();
+    cached,
+  } = useApp();
 
   return (
     <>
       <header className={styles.main_header}></header>
-      <AvailableGames
-        setCurrentGameId={setCurrentGameId}
-        selectedGamesIDs={selectedGamesIDs}
-        setSelectedGamesIDs={setSelectedGamesIDs}
-      />
-      <AppContext.Provider value={dataStorage}>
-        <NewsResults
-          isDataLoaded={isDataLoaded}
-          selectedGamesIDs={selectedGamesIDs}
-          error={error}
+      <DataContext.Provider value={selectedGamesIDs}>
+        <AvailableGames
+          currentGameId={currentGameId}
+          setCurrentGameId={setCurrentGameId}
+          // selectedGamesIDs={selectedGamesIDs}
+          setSelectedGamesIDs={setSelectedGamesIDs}
         />
-      </AppContext.Provider>
+        <NewsResults
+          isLoading={isLoading}
+          //selectedGamesIDs={selectedGamesIDs}
+          error={error}
+          dataStorage={dataStorage}
+        />
+      </DataContext.Provider>
     </>
   );
 }

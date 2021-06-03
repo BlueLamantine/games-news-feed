@@ -3,7 +3,7 @@
 import { createElement, createFragment, render } from '../../framework';
 import { gamesInfo } from '../../data/SteamAPI';
 import Checkbox from '../Checkbox/Checkbox';
-
+import { useDataContext } from '../../context';
 function trackGames({ target }, setCurrentGameId, selectedGamesIDs, setSelectedGamesIDs) {
   const id = target.id;
   if (selectedGamesIDs.includes(id)) {
@@ -16,15 +16,19 @@ function trackGames({ target }, setCurrentGameId, selectedGamesIDs, setSelectedG
 }
 
 export default function AvailableGames({
+  currentGameId,
   setCurrentGameId,
-  selectedGamesIDs,
+  //selectedGamesIDs,
   setSelectedGamesIDs,
 }) {
+  const selectedGamesIDs = useDataContext();
+
+  //console.log(Array.from(selectedGamesIDs));
   return (
     <form
       id="games"
       onChange={event => {
-        trackGames(event, setCurrentGameId, selectedGamesIDs, setSelectedGamesIDs);
+        setCurrentGameId(event.target.id);
       }}
     >
       <fieldset class="allowed_games">
@@ -34,7 +38,7 @@ export default function AvailableGames({
             <Checkbox
               id={appid}
               label={name}
-              condition={selectedGamesIDs.includes(appid.toString())}
+              condition={Array.from(selectedGamesIDs).includes(appid.toString())}
             />
           </>
         ))}
