@@ -6,9 +6,10 @@ import NewsItem from '../NewsFeedItem/NewsFeedItem';
 import { useAppContext, useDataContext } from '../../context';
 
 export default function NewsFeed({ currentTimestamp, currentKeyword }) {
-  const selectedGamesIDs = useDataContext();
+  const selectedGamesIDs = useAppContext();
+  const dataStorage = useDataContext();
   const [currentTag, setCurrentTag] = useState(null);
-  const dataStorage = useAppContext();
+
   const changeTag = value => {
     if (currentTag !== null) {
       setCurrentTag(null);

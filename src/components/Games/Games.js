@@ -3,27 +3,11 @@
 import { createElement, createFragment, render } from '../../framework';
 import { gamesInfo } from '../../data/SteamAPI';
 import Checkbox from '../Checkbox/Checkbox';
-import { useDataContext } from '../../context';
-function trackGames({ target }, setCurrentGameId, selectedGamesIDs, setSelectedGamesIDs) {
-  const id = target.id;
-  if (selectedGamesIDs.includes(id)) {
-    setSelectedGamesIDs(selectedGamesIDs.filter(filterID => filterID !== id));
-  } else {
-    setSelectedGamesIDs([...selectedGamesIDs, id]);
-    setCurrentGameId(id);
-  }
-  render();
-}
+import { useAppContext } from '../../context';
 
-export default function AvailableGames({
-  currentGameId,
-  setCurrentGameId,
-  //selectedGamesIDs,
-  setSelectedGamesIDs,
-}) {
-  const selectedGamesIDs = useDataContext();
+export default function Games({ setCurrentGameId }) {
+  const selectedGamesIDs = useAppContext();
 
-  //console.log(Array.from(selectedGamesIDs));
   return (
     <form
       id="games"

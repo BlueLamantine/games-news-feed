@@ -1,41 +1,27 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
-import { createElement, createFragment, useApp } from '../../framework';
-import { useEffect, useState } from '../../framework';
+import { createElement, createFragment, useDataNews } from '../../framework';
 import AvailableGames from '../Games/Games';
 import NewsResults from '../News/NewsResults';
 import styles from './App.css';
 import { AppContext, DataContext } from '../../context';
 
 export default function App() {
-  const {
-    currentGameId,
-    setCurrentGameId,
-    selectedGamesIDs,
-    setSelectedGamesIDs,
-    error,
-    isLoading,
-    dataStorage,
-    cached,
-  } = useApp();
+  const { setCurrentGameId, selectedGamesIDs, error, isLoading, dataStorage } = useDataNews();
 
   return (
     <>
       <header className={styles.main_header}></header>
-      <DataContext.Provider value={selectedGamesIDs}>
-        <AvailableGames
-          currentGameId={currentGameId}
-          setCurrentGameId={setCurrentGameId}
-          // selectedGamesIDs={selectedGamesIDs}
-          setSelectedGamesIDs={setSelectedGamesIDs}
-        />
-        <NewsResults
-          isLoading={isLoading}
-          //selectedGamesIDs={selectedGamesIDs}
-          error={error}
-          dataStorage={dataStorage}
-        />
-      </DataContext.Provider>
+      <AppContext.Provider value={selectedGamesIDs}>
+        <AvailableGames setCurrentGameId={setCurrentGameId} />
+        {selectedGamesIDs.length == 0 ? (
+          <div>Welcome to your personal game news aggregator!</div>
+        ) : (
+          <DataContext.Provider value={dataStorage}>
+            <NewsResults isLoading={isLoading} error={error} />
+          </DataContext.Provider>
+        )}
+      </AppContext.Provider>
     </>
   );
 }

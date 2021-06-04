@@ -1,9 +1,7 @@
 import { useEffect, useState } from '../framework';
 import { loadNewsData } from '../data/SteamAPI';
-import { currentDate } from '../utils';
 
-export function useApp() {
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
+export function useDataNews() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [dataStorage, setDataStorage] = useState({});
@@ -19,7 +17,7 @@ export function useApp() {
           if (error) {
             setError(error);
           } else if (data) {
-            // setDataStorage({ ...dataStorage, [currentGameId]: data }); - doest work, why?
+            // setDataStorage({ ...dataStorage, [currentGameId]: data }); - doesn't work, why?
             dataStorage[currentGameId] = data;
           }
         })
@@ -28,7 +26,7 @@ export function useApp() {
     }
   }, [currentGameId]);
 
-  const { selectedGamesIDs } = useDataNews(currentGameId, setCurrentGameId);
+  const { selectedGamesIDs } = useApp(currentGameId, setCurrentGameId);
   return {
     currentGameId,
     setCurrentGameId,
@@ -43,7 +41,7 @@ export function useApp() {
   };
 }
 
-export function useDataNews(currentGameId, setCurrentGameId) {
+export function useApp(currentGameId, setCurrentGameId) {
   const [selectedGamesIDs, setSelectedGamesIDs] = useState([]);
   useEffect(() => {
     if (currentGameId) {
@@ -56,7 +54,6 @@ export function useDataNews(currentGameId, setCurrentGameId) {
     }
   }, [currentGameId]);
 
-  //console.log(dataStorage);
   return {
     selectedGamesIDs,
     setSelectedGamesIDs,
