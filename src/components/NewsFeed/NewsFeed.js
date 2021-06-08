@@ -2,44 +2,28 @@
 /** @jsxFrag createFragment */
 import { createElement, createFragment, useState } from '../../framework';
 import { prepareDataToRender } from '../../data/newsData';
-import NewsItem from '../NewsFeedItem/NewsFeedItem';
+import NewsItem from '../NewsFeedItem';
 import { useAppContext, useDataContext } from '../../context';
 
-export default function NewsFeed({ currentTimestamp, currentKeyword }) {
+export default function NewsFeed({ currentTimestamp, currentKeyword, changeTag, currentTag }) {
   const selectedGamesIDs = useAppContext();
   const dataStorage = useDataContext();
-  const [currentTag, setCurrentTag] = useState(null);
-
-  const changeTag = value => {
-    if (currentTag !== null) {
-      setCurrentTag(null);
-    } else {
-      setCurrentTag(value);
-    }
-  };
-
+  let dataToRender = [];
+  dataToRender = prepareDataToRender(
+    Array.from(selectedGamesIDs),
+    dataStorage,
+    currentTimestamp,
+    currentKeyword,
+    currentTag,
+  );
+  if (dataToRender.length == 0) {
+    return <div>There are no results that match your request</div>;
+  }
   return (
     <>
-      <p>News feed:</p>
-      <div>tag:{currentTag || 'all tags'}</div>
-      <div>
-        {prepareDataToRender(
-          Array.from(selectedGamesIDs),
-          dataStorage,
-          currentTimestamp,
-          currentKeyword,
-          currentTag,
-        ).map(item => {
-          return (
-            <NewsItem
-              itemData={item}
-              currentTag={currentTag}
-              setCurrentTag={setCurrentTag}
-              onChange={changeTag}
-            />
-          );
-        })}
-      </div>
+      {dataToRender.map(item => {
+        return <NewsItem itemData={item} currentTag={currentTag} onChange={changeTag} />;
+      })}
     </>
   );
 }

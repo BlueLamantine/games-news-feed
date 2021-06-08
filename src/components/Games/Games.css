@@ -1,0 +1,33 @@
+.side_wrapper {
+  border-bottom: 1px solid var(--border-color);
+  padding: 36px 0;
+  width: 100%;
+}
+.side_title {
+  font-size: 12px;
+  letter-spacing: 0.07em;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+.side_menu {
+  display: flex;
+  flex-direction: column;
+}
+@media screen and (max-width: 768px) {
+  .side_wrapper {
+    padding: 10px 0;
+  }
+  .side_menu {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .side_title {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+}
+@media screen and (max-width: 340px) {
+  .side_menu {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
