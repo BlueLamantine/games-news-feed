@@ -58,6 +58,6 @@
     height: 200px;
   }
   .wrapper {
-    overflow-y: auto;
+    height: 100%;
   }
 }
