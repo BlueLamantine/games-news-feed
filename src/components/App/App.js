@@ -1,6 +1,5 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
-import { createElement, createFragment, useDataNews } from '../../framework';
+import React from 'react';
+import { useDataNews } from '../../framework';
 import Games from '../Games';
 import NewsResults from '../News';
 import styles from './App.css';
@@ -12,17 +11,17 @@ export default function App() {
 
   return (
     <>
-      <div class={styles.container}>
+      <div className={styles.container}>
         <AppContext.Provider value={selectedGamesIDs}>
-          <div class={styles.sidebar}>
-            <a class={styles.logo_expand} href="https://store.steampowered.com/news/">
+          <div className={styles.sidebar}>
+            <a className={styles.logo_expand} href="https://store.steampowered.com/news/">
               <img src="https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016" />
             </a>
             <Games setCurrentGameId={setCurrentGameId} />
           </div>
-          <div class={styles.wrapper}>
+          <div className={styles.wrapper}>
             {selectedGamesIDs.length == 0 ? (
-              <p class={styles.greeting}>Welcome to your personal game news aggregator!</p>
+              <p className={styles.greeting}>Welcome to your personal game news aggregator!</p>
             ) : (
               <DataContext.Provider value={dataStorage}>
                 <NewsResults isLoading={isLoading} error={error} />

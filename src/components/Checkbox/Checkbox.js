@@ -1,16 +1,14 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
-import { createElement, createFragment } from '../../framework/element';
+import React from 'react';
 import styles from './Checkbox.css';
 
 export default function Checkbox({ id = null, label = '', onChange = null, condition = false }) {
   return (
-    <div class={styles.checkbox}>
-      <input type="checkbox" id={id} value={id} checked={condition} onChange={onChange} />
-      <label For={id}></label>
-      <div data-id={'link'} class={styles.label_text}>
-        {label}
+    <>
+      <div className={styles.checkbox}>
+        <input type="checkbox" id={id} value={id} defaultChecked={condition} onChange={onChange} />
+        <label htmlFor={id}></label>
+        <div className={styles.label_text}>{label}</div>
       </div>
-    </div>
+    </>
   );
 }

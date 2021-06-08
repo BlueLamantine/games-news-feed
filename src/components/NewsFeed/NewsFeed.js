@@ -1,6 +1,4 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
-import { createElement, createFragment, useState } from '../../framework';
+import React from 'react';
 import { prepareDataToRender } from '../../data/newsData';
 import NewsItem from '../NewsFeedItem';
 import { useAppContext, useDataContext } from '../../context';
@@ -22,7 +20,9 @@ export default function NewsFeed({ currentTimestamp, currentKeyword, changeTag, 
   return (
     <>
       {dataToRender.map(item => {
-        return <NewsItem itemData={item} currentTag={currentTag} onChange={changeTag} />;
+        return (
+          <NewsItem key={item.gid} itemData={item} currentTag={currentTag} onChange={changeTag} />
+        );
       })}
     </>
   );

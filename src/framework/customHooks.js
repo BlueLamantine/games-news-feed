@@ -1,4 +1,4 @@
-import { useEffect, useState } from '../framework';
+import { useEffect, useState } from 'react';
 import { loadNewsData } from '../data/SteamAPI';
 
 export function useDataNews() {
@@ -7,27 +7,23 @@ export function useDataNews() {
   const [dataStorage, setDataStorage] = useState({});
   const [currentGameId, setCurrentGameId] = useState('');
 
-  useEffect(
-    setDataStorage => {
-      if (currentGameId) {
-        const currentGameDataIsLoaded = dataStorage[currentGameId];
-        if (currentGameDataIsLoaded) return;
-        //setIsLoading(true); //- forever loading
-        loadNewsData(currentGameId)
-          .then(({ error, data }) => {
-            if (error) {
-              setError(error);
-            } else if (data) {
-              //setDataStorage({ ...dataStorage, [currentGameId]: data });// - doesn't work, why?
-              dataStorage[currentGameId] = data;
-            }
-          })
-          .catch(setError)
-          .finally(() => setIsLoading(false));
-      }
-    },
-    [currentGameId],
-  );
+  useEffect(() => {
+    if (currentGameId) {
+      const currentGameDataIsLoaded = dataStorage[currentGameId];
+      if (currentGameDataIsLoaded) return;
+      setIsLoading(true);
+      loadNewsData(currentGameId)
+        .then(({ error, data }) => {
+          if (error) {
+            setError(error);
+          } else if (data) {
+            setDataStorage({ ...dataStorage, [currentGameId]: data });
+          }
+        })
+        .catch(setError)
+        .finally(() => setIsLoading(false));
+    }
+  }, [currentGameId]);
 
   const { selectedGamesIDs } = useApp(currentGameId, setCurrentGameId);
   return {

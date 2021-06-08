@@ -1,11 +1,8 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
-import { createElement, createFragment, useState } from '../../framework';
+import React, { useState } from 'react';
 import Timestamp from '../Timestamp';
 import Search from '../Search';
 import NewsFeed from '../NewsFeed';
 import styles from './NewsResults.css';
-import News from '.';
 
 export default function NewsResults({ isLoading, error }) {
   const [currentTimestamp, setCurrentTimestamp] = useState('alltime');
@@ -21,12 +18,14 @@ export default function NewsResults({ isLoading, error }) {
   };
 
   if (error) {
-    return <div class={styles.error}>error</div>;
+    return (
+      <div className={styles.error}>{typeof error === 'object' ? error.toString() : error}</div>
+    );
   }
 
   if (isLoading) {
     return (
-      <div class={styles.loading}>
+      <div className={styles.loading}>
         Loading...Please, wait. It may takes more than 20 seconds for a first load
       </div>
     );
@@ -34,18 +33,18 @@ export default function NewsResults({ isLoading, error }) {
 
   return (
     <>
-      <div class={styles.header}>
-        <Search currentKeyword={currentKeyword} setCurrentKeyword={setCurrentKeyword} />
+      <div className={styles.header}>
+        <Search value={currentKeyword} onBlur={setCurrentKeyword} />
         <Timestamp currentTimestamp={currentTimestamp} setCurrentTimestamp={setCurrentTimestamp} />
       </div>
-      <div class={styles.main_container}>
-        <div class={styles.main_header}>
-          <h1 class={styles.header_text}>Games News Feed</h1>
-          <div class={styles.tag_container}>
-            <span class={styles.tag_title}>News by tag :</span> {currentTag || <span>*</span>}
+      <div className={styles.main_container}>
+        <div className={styles.main_header}>
+          <h1 className={styles.header_text}>Games News Feed</h1>
+          <div className={styles.tag_container}>
+            <span className={styles.tag_title}>News by tag :</span> {currentTag || <span>*</span>}
           </div>
         </div>
-        <div class={styles.news_feed}>
+        <div className={styles.news_feed}>
           <NewsFeed
             currentTimestamp={currentTimestamp}
             currentKeyword={currentKeyword}

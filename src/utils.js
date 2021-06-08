@@ -15,15 +15,6 @@ export function sortDataByNewest(data) {
   return data.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
-export function dataToHTML(data) {
-  const parser = new DOMParser();
-  const toHTML = parser.parseFromString(data, 'text/html');
-  const content = toHTML.body.childNodes;
-  const div = document.createElement('div');
-  Array.from(content).forEach(el => div.appendChild(el));
-  return div;
-}
-
 export function getStartDate() {
   let now = new Date();
   let start = new Date(now);

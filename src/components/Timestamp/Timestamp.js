@@ -1,6 +1,4 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
-import { createElement, createFragment } from '../../framework';
+import React from 'react';
 import styles from './Timestamp.css';
 const TIMESTAMPS = [
   { id: 'all', value: 'alltime', name: 'All news' },
@@ -12,15 +10,16 @@ const TIMESTAMPS = [
 export default function Timestamp({ currentTimestamp, setCurrentTimestamp }) {
   return (
     <>
-      <div class={styles.timestamp}>
+      <div className={styles.timestamp}>
         <select id="selectTimestamp" onChange={event => setCurrentTimestamp(event.target.value)}>
           {TIMESTAMPS.map(({ id, value, name }) => {
             return (
               <option
+                key={id}
                 value={value}
                 id={id}
                 name="timestamp-option"
-                {...(value === currentTimestamp ? { selected: '' } : {})}
+                {...(value === currentTimestamp ? { defaultValue: '' } : {})}
               >
                 {name}
               </option>
