@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Timestamp from '../Timestamp';
-import Search from '../Search';
+import Search from '../SearchBar';
 import NewsFeed from '../NewsFeed';
 import styles from './NewsResults.css';
 

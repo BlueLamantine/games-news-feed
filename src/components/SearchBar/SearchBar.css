@@ -12,7 +12,7 @@ input::placeholder {
   color: #233d4a;
 }
 input:disabled {
-  opacity: 50%;
+  opacity: 60%;
 }
 .search_bar input,
 .search_btn {
