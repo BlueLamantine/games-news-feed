@@ -14,7 +14,7 @@ export default function Games({ setCurrentGameId }) {
           setCurrentGameId(event.target.id);
         }}
       >
-        <fieldset className="allowed_games">
+        <fieldset>
           <div className={styles.side_title}>Select games to track news</div>
           <div className={styles.side_menu}>
             {gamesInfo.apps.map(({ appid, name }) => (

@@ -71,9 +71,20 @@
 }
 @media screen and (max-width: 590px) {
   .news_item {
-    width: 100%;
+    width: 320px;
   }
   .item_title {
     font-size: 16px;
+  }
+}
+@media screen and (max-width: 390px) {
+  .news_item {
+    width: 277px;
+  }
+}
+@media screen and (max-width: 300px) {
+  .news_item {
+    width: 226px;
+    margin: 0 0 15px 0;
   }
 }
