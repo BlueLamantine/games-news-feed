@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDataNews } from '../../framework';
+import useDataNews from '../../customHooks';
 import Games from '../Games';
 import NewsResults from '../News';
 import styles from './App.css';
