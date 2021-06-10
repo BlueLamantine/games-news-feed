@@ -34,8 +34,12 @@ export default function NewsResults({ isLoading, error }) {
   return (
     <>
       <div className={styles.header}>
-        <Search value={currentKeyword} onBlur={setCurrentKeyword} />
-        <Timestamp currentTimestamp={currentTimestamp} setCurrentTimestamp={setCurrentTimestamp} />
+        <Search value={currentKeyword} handleSearch={setCurrentKeyword} currentTag={currentTag} />
+        <Timestamp
+          currentTimestamp={currentTimestamp}
+          setCurrentTimestamp={setCurrentTimestamp}
+          currentTag={currentTag}
+        />
       </div>
       <div className={styles.main_container}>
         <div className={styles.main_header}>

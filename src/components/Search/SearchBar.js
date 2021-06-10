@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './SearchBar.css';
 
-export default function Search({ value, onBlur }) {
+export default function Search({ value, handleSearch, currentTag }) {
   let input = React.createRef();
   return (
     <>
@@ -12,9 +12,14 @@ export default function Search({ value, onBlur }) {
           placeholder="Search by keyword"
           defaultValue={value}
           ref={input}
-          onBlur={event => onBlur(event.target.value)}
+          onBlur={event => handleSearch(event.target.value)}
+          onKeyPress={event => {
+            if (event.key === 'Enter') {
+              handleSearch(event.target.value);
+            }
+          }}
+          disabled={currentTag != null || false}
         />
-        <button type="submit" className={styles.search_btn}></button>
       </div>
     </>
   );

@@ -7,20 +7,19 @@ const TIMESTAMPS = [
   { id: 'month', value: 'month', name: 'This month news' },
 ];
 
-export default function Timestamp({ currentTimestamp, setCurrentTimestamp }) {
+export default function Timestamp({ currentTimestamp, setCurrentTimestamp, currentTag }) {
   return (
     <>
       <div className={styles.timestamp}>
-        <select id="selectTimestamp" onChange={event => setCurrentTimestamp(event.target.value)}>
+        <select
+          id="selectTimestamp"
+          value={currentTimestamp}
+          onChange={event => setCurrentTimestamp(event.target.value)}
+          disabled={currentTag != null || false}
+        >
           {TIMESTAMPS.map(({ id, value, name }) => {
             return (
-              <option
-                key={id}
-                value={value}
-                id={id}
-                name="timestamp-option"
-                {...(value === currentTimestamp ? { defaultValue: '' } : {})}
-              >
+              <option key={id} value={value} id={id} name="timestamp-option">
                 {name}
               </option>
             );
