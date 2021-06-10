@@ -37,7 +37,7 @@ module.exports={timestamp:"_timestamp_a1899"};
 },{"./Timestamp":"nw83"}],"YGqu":[function(require,module,exports) {
 module.exports={search_bar:"_search_bar_cbcbc",search_btn:"_search_btn_cbcbc"};
 },{}],"roS1":[function(require,module,exports) {
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=a;var e=r(require("react")),t=r(require("./SearchBar.css"));function r(e){return e&&e.__esModule?e:{default:e}}function a({value:r,handleSearch:a,currentTag:l}){let u=e.default.createRef();return e.default.createElement(e.default.Fragment,null,e.default.createElement("div",{className:t.default.search_bar},e.default.createElement("input",{type:"text",id:"search-input",placeholder:"Search by keyword",defaultValue:r,ref:u,onBlur:e=>a(e.target.value),onKeyPress:e=>{"Enter"===e.key&&a(e.target.value)},disabled:null!=l||!1})))}
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=a;var e=r(require("react")),t=r(require("./SearchBar.css"));function r(e){return e&&e.__esModule?e:{default:e}}function a({value:r,handleSearch:a,currentTag:u}){return e.default.createElement(e.default.Fragment,null,e.default.createElement("div",{className:t.default.search_bar},e.default.createElement("input",{type:"text",id:"search-input",placeholder:"Search by keyword",defaultValue:r,onBlur:e=>a(e.target.value),onKeyPress:e=>{"Enter"===e.key&&a(e.target.value)}})))}
 },{"react":"1n8/","./SearchBar.css":"YGqu"}],"ecZL":[function(require,module,exports) {
 "use strict";Object.defineProperty(exports,"__esModule",{value:!0}),Object.defineProperty(exports,"default",{enumerable:!0,get:function(){return e.default}});var e=r(require("./SearchBar.js"));function r(e){return e&&e.__esModule?e:{default:e}}
 },{"./SearchBar.js":"roS1"}],"FO+Z":[function(require,module,exports) {
@@ -107,4 +107,4 @@ module.exports={container:"_container_f286c",sidebar:"_sidebar_f286c",logo_expan
 },{"./App":"SoJR"}],"Focm":[function(require,module,exports) {
 "use strict";var e=u(require("react")),r=require("react-dom"),t=u(require("./components/App"));function u(e){return e&&e.__esModule?e:{default:e}}(0,r.render)(e.default.createElement(t.default,null),document.getElementById("app-root"));
 },{"react":"1n8/","react-dom":"NKHc","./components/App":"L+lk"}]},{},["Focm"], null)
-//# sourceMappingURL=src.c91e585c.js.map
+//# sourceMappingURL=src.549e896f.js.map
