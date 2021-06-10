@@ -6,7 +6,6 @@
 
 - Selecting which games to track news from
 - Browse news (posts) feed provided by Steam for selected games
-  - Ability to share news (posts) with twitter and facebook
 - Filter news by specific tags
 - Group news with timestamps (day, week, month)
 - Search news by keywords
