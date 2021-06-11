@@ -51,7 +51,7 @@ export function prepareDataToRender(
   filteredNews = filterDataByTimestamp(dataNewsContainer, currentDate, currentTimestamp);
 
   if (currentKeyword !== '') {
-    filteredNews = dataNewsContainer.filter(el => el.title.includes(currentKeyword));
+    filteredNews = filteredNews.filter(el => el.title.includes(currentKeyword));
   }
 
   if (currentTag) {
