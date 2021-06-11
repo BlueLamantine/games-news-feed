@@ -21,7 +21,7 @@ export default function NewsFeed({ currentTimestamp, currentKeyword, changeTag, 
     <>
       {dataToRender.map(item => {
         return (
-          <NewsItem key={item.gid} itemData={item} currentTag={currentTag} onChange={changeTag} />
+          <NewsItem key={item.gid} itemData={item} currentTag={currentTag} changeTag={changeTag} />
         );
       })}
     </>

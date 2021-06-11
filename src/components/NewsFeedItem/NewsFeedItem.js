@@ -4,7 +4,7 @@ import { getDateFromUnixTimestamp } from '../../utils';
 import Checkbox from '../Checkbox/Checkbox';
 import styles from './NewsFeedItem.css';
 
-export default function NewsItem({ itemData, currentTag, onChange }) {
+export default function NewsItem({ itemData, currentTag, changeTag }) {
   const { date, title, contents, feedlabel } = itemData;
   return (
     <>
@@ -23,7 +23,7 @@ export default function NewsItem({ itemData, currentTag, onChange }) {
                 id={feedlabel}
                 label={feedlabel}
                 condition={currentTag == feedlabel}
-                onChange={event => onChange(event.target.value)}
+                handleChange={event => changeTag(event.target.value)}
               />
             </>
           </div>
