@@ -7,6 +7,7 @@ export default function Search({ value, handleSearch, currentTag }) {
       <div className={styles.search_bar}>
         <input
           type="text"
+          autocomplete="off"
           id="search-input"
           placeholder="Search by keyword"
           defaultValue={value}
