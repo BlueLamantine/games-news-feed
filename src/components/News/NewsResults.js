@@ -18,9 +18,7 @@ export default function NewsResults({ isLoading, error }) {
   };
 
   if (error) {
-    return (
-      <div className={styles.error}>{typeof error === 'object' ? error.toString() : error}</div>
-    );
+    return <div className={styles.error}>{error}</div>;
   }
 
   if (isLoading) {

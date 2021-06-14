@@ -4,7 +4,7 @@ import { loadNewsData } from './data/SteamAPI';
 export default function useDataNews() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [dataStorage, setDataStorage] = useState({});
+  const [newsByGames, setNewsByGames] = useState({});
   const [currentGameId, setCurrentGameId] = useState('');
   const [selectedGamesIDs, setSelectedGamesIDs] = useState([]);
 
@@ -16,7 +16,7 @@ export default function useDataNews() {
           )
         : setSelectedGamesIDs([...selectedGamesIDs, currentGameId]);
 
-      const currentGameDataIsLoaded = dataStorage[currentGameId];
+      const currentGameDataIsLoaded = newsByGames[currentGameId];
       if (currentGameDataIsLoaded) {
         setCurrentGameId('');
         return;
@@ -26,9 +26,9 @@ export default function useDataNews() {
       loadNewsData(currentGameId)
         .then(({ error, data }) => {
           if (error) {
-            setError(error);
+            setError(typeof error === 'object' ? error.toString() : error);
           } else if (data) {
-            setDataStorage({ ...dataStorage, [currentGameId]: data });
+            setNewsByGames({ ...newsByGames, [currentGameId]: data });
           }
         })
         .catch(setError)
@@ -43,7 +43,7 @@ export default function useDataNews() {
     setCurrentGameId,
     isLoading,
     error,
-    dataStorage,
+    newsByGames,
     selectedGamesIDs,
   };
 }

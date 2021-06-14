@@ -1,15 +1,15 @@
 import React from 'react';
 import { prepareDataToRender } from '../../data/newsData';
 import NewsItem from '../NewsFeedItem';
-import { useAppContext, useDataContext } from '../../context';
+import { useGamesIdsContext, useGamesInfoContext } from '../../context';
 
 export default function NewsFeed({ currentTimestamp, currentKeyword, changeTag, currentTag }) {
-  const selectedGamesIDs = useAppContext();
-  const dataStorage = useDataContext();
+  const selectedGamesIDs = useGamesIdsContext();
+  const newsByGames = useGamesInfoContext();
   let dataToRender = [];
   dataToRender = prepareDataToRender(
     Array.from(selectedGamesIDs),
-    dataStorage,
+    newsByGames,
     currentTimestamp,
     currentKeyword,
     currentTag,

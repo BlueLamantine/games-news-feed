@@ -1,10 +1,10 @@
 import React from 'react';
 import { gamesInfo } from '../../data/SteamAPI';
-import Checkbox from '../Checkbox/Checkbox';
-import { useAppContext } from '../../context';
+import Checkbox from '../Checkbox';
+import { useGamesIdsContext } from '../../context';
 import styles from './Games.css';
 export default function Games({ setCurrentGameId }) {
-  const selectedGamesIDs = useAppContext();
+  const selectedGamesIDs = useGamesIdsContext();
 
   return (
     <div className={styles.side_wrapper}>

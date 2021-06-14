@@ -9,23 +9,21 @@ const TIMESTAMPS = [
 
 export default function Timestamp({ currentTimestamp, setCurrentTimestamp, currentTag }) {
   return (
-    <>
-      <div className={styles.timestamp}>
-        <select
-          id="selectTimestamp"
-          value={currentTimestamp}
-          onChange={event => setCurrentTimestamp(event.target.value)}
-          disabled={currentTag != null || false}
-        >
-          {TIMESTAMPS.map(({ id, value, name }) => {
-            return (
-              <option key={id} value={value} id={id} name="timestamp-option">
-                {name}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-    </>
+    <div className={styles.timestamp}>
+      <select
+        id="selectTimestamp"
+        value={currentTimestamp}
+        onChange={event => setCurrentTimestamp(event.target.value)}
+        disabled={currentTag != null || false}
+      >
+        {TIMESTAMPS.map(({ id, value, name }) => {
+          return (
+            <option key={id} value={value} id={id} name="timestamp-option">
+              {name}
+            </option>
+          );
+        })}
+      </select>
+    </div>
   );
 }

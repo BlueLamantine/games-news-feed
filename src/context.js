@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 
-export const AppContext = createContext({});
-export const useAppContext = () => useContext(AppContext);
+export const GamesIdsContext = createContext({});
+export const useGamesIdsContext = () => useContext(GamesIdsContext);
 
-export const DataContext = createContext({});
-export const useDataContext = () => useContext(DataContext);
+export const GamesInfoContext = createContext({});
+export const useGamesInfoContext = () => useContext(GamesInfoContext);

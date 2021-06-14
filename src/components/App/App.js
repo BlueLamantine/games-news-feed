@@ -3,16 +3,16 @@ import useDataNews from '../../customHooks';
 import Games from '../Games';
 import NewsResults from '../News';
 import styles from './App.css';
-import { AppContext, DataContext } from '../../context';
+import { GamesIdsContext, GamesInfoContext } from '../../context';
 import Footer from './AppFooter.js';
 
 export default function App() {
-  const { setCurrentGameId, selectedGamesIDs, error, isLoading, dataStorage } = useDataNews();
+  const { setCurrentGameId, selectedGamesIDs, error, isLoading, newsByGames } = useDataNews();
 
   return (
     <>
       <div className={styles.container}>
-        <AppContext.Provider value={selectedGamesIDs}>
+        <GamesIdsContext.Provider value={selectedGamesIDs}>
           <div className={styles.sidebar}>
             <a className={styles.logo_expand} href="https://store.steampowered.com/news/">
               <img src="https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016" />
@@ -20,15 +20,15 @@ export default function App() {
             <Games setCurrentGameId={setCurrentGameId} />
           </div>
           <div className={styles.wrapper}>
-            {selectedGamesIDs.length == 0 ? (
+            {!selectedGamesIDs.length ? (
               <p className={styles.greeting}>Welcome to your personal game news aggregator!</p>
             ) : (
-              <DataContext.Provider value={dataStorage}>
+              <GamesInfoContext.Provider value={newsByGames}>
                 <NewsResults isLoading={isLoading} error={error} />
-              </DataContext.Provider>
+              </GamesInfoContext.Provider>
             )}
           </div>
-        </AppContext.Provider>
+        </GamesIdsContext.Provider>
       </div>
       <Footer />
     </>

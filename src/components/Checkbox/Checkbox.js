@@ -10,12 +10,10 @@ export default function Checkbox({
   condition = false,
 }) {
   return (
-    <>
-      <div className={styles.checkbox}>
-        <input type="checkbox" id={id} value={id} onChange={handleChange} checked={condition} />
-        <label htmlFor={id}></label>
-        <div className={styles.label_text}>{label}</div>
-      </div>
-    </>
+    <div className={styles.checkbox}>
+      <input type="checkbox" id={id} value={id} onChange={handleChange} checked={condition} />
+      <label htmlFor={id}></label>
+      <div className={styles.label_text}>{label}</div>
+    </div>
   );
 }
